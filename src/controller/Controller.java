@@ -33,17 +33,10 @@ public class Controller {
 			int option = lector.nextInt();
 			switch(option){
 			case 1:
-				long start1 = System.currentTimeMillis();
 				modelo.darColaPrioridadMaxCP();
-				long end1 = System.currentTimeMillis();
-
-				long start2 = System.currentTimeMillis();
-				// TODO Concetar con el metodo con MaxHeapCP
-				long end2 = System.currentTimeMillis();
-
-				view.printMessage("El numero de comparendos es de: " + modelo.darColaPrioridadMaxCP().size() );
-				view.printMessage("Tiempo de carga (seg) en MaxColaCP: " + (end1-start1)/1000.0);
-				view.printMessage("Tiempo de carga (seg) en MaxHeapCP: " + (end2-start2)/1000.0);
+				view.printMessage("\nLectura de comparendorendos: ");
+				view.printMessage("El numero de comparendos es de: " + modelo.darColaPrioridadMaxCP().size());
+				view.printMessage("El comparendo con el mayor OBJECTID es: " + modelo.darObjectidMayor() + " \n");
 				break;
 
 			case 2:

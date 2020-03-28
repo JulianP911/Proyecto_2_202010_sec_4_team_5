@@ -145,4 +145,30 @@ public class Modelo
 			Collections.swap(list, i, random.nextInt(i));
 		} 
 	}
+	
+	/**
+	 * Muestra la informacion con el mayor OBJECTID encontrado en la cola de prioridad MaxCP
+	 * @return El comparendo con mayor objectid encontrado recorriendo la cola de prioridad MaxCP
+	 */
+	public String darObjectidMayor()
+	{
+		String mensaje = " ";
+		Comparendo actual = datos1.get(0);
+
+		Iterator<Comparendo> it = darColaPrioridadMaxCP().iterator();
+		while(it.hasNext())
+		{
+			Comparendo elemento = it.next();
+			if(elemento.getObjective() > actual.getObjective())
+			{
+				actual = elemento;
+			}
+		}
+
+		mensaje = actual.getObjective() + ", " + actual.getFecha_hora() + ", " + actual.getInfraccion() + ", " + 
+				actual.getClase_vehi() + ", " + actual.getTipo_servi() + ", " +  actual.getLocalidad() + ", " +
+				actual.getMunicipio();
+
+		return mensaje;
+	}
 }
