@@ -6,7 +6,7 @@ import java.util.Date;
  * Clase de tipo comparendo el cual almacena todas sus caracteristicas y detalles
  * @author Julian Padilla - Pablo Pastrana
  */
-public class Comparendo implements Comparable<Comparendo>
+public class Comparendo1 implements Comparable<Comparendo1>
 {
 	// Atributos
 	
@@ -81,7 +81,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 * @param pLatitud Latitud del comparendo
 	 * @param pLongitud Longitud del comparendo
 	 */
-	public Comparendo(int objeId, Date fecha, String descripcion, String detencion, String claseVeh, String tipoSer, String codInfraccion, String localidadP, String municipioP, double lonP, double latP)
+	public Comparendo1(int objeId, Date fecha, String descripcion, String detencion, String claseVeh, String tipoSer, String codInfraccion, String localidadP, String municipioP, double lonP, double latP)
 	{
 		objectId = objeId;
 		fecha_hora = fecha;
@@ -295,32 +295,7 @@ public class Comparendo implements Comparable<Comparendo>
 	{
 		this.longitud = longitud;
 	}
-
-	/**
-	 * Compara los comparendos por la latitud criterio de prioridad
-	 * Si las fechas_horas son iguales se compara por el objectid
-	 */
-	@Override
-	public int compareTo(Comparendo pItem) 
-	{
-		int resultado = 0;
-
-		if(this.getInfraccion().compareTo(pItem.getInfraccion()) > 0)
-		{
-			resultado = -1;
-		}
-		else if(this.getInfraccion().compareTo(pItem.getInfraccion()) == 0)
-		{
-			resultado = 0;
-		}
-		else if(this.getInfraccion().compareTo(pItem.getInfraccion()) < 0)
-		{
-			resultado = 1;
-		}
-		
-		return resultado;
-	}
-
+	
 	/**
 	 * Metodo toString, proporciona la informacion del comparendo actual
 	 */
@@ -331,6 +306,31 @@ public class Comparendo implements Comparable<Comparendo>
 				+ ", MEDIO_DETE=" + medio_dete + ", CLASE_VEHI=" + clase_vehi + ", TIPO_SERVI=" + tipo_servi
 				+ ", INFRACCION=" + infraccion + ", LOCALIDAD=" + localidad + ", MUNICIPIO=" + municipio + ", latitud=" + latitud + ", longitud="
 				+ longitud + "]";
+	}
+
+	/**
+	 * Compara los comparendos por la latitud criterio de prioridad
+	 * Si las fechas_horas son iguales se compara por el objectid
+	 */
+	@Override
+	public int compareTo(Comparendo1 pItem) 
+	{
+		int resultado = 0;
+
+		if(this.getTipo_servi().compareTo(pItem.getTipo_servi()) > 0)
+		{
+			resultado = 1;
+		}
+		else if(this.getTipo_servi().compareTo(pItem.getTipo_servi()) == 0)
+		{
+			resultado = 0;
+		}
+		else if(this.getTipo_servi().compareTo(pItem.getTipo_servi()) < 0)
+		{
+			resultado = -1;
+		}
+		
+		return resultado;
 	}
 
 }
