@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -17,8 +18,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import model.Comparendo;
+import model.LlaveComparendo;
+import model.data_structures.LinearProbingHash;
 import model.data_structures.MaxColaCP;
 import model.data_structures.MaxHeapCP;
+import model.data_structures.SeparteChainingHash2;
 
 /**
  * Definicion del modelo del mundo
@@ -218,6 +222,408 @@ public class Modelo
 		}
 
 		return nuevo;
+	}
+	
+	/**
+	 * Convierte la lista de objetos cargados en una tabla de hash - Linear Probing
+	 */
+	public LinearProbingHash<LlaveComparendo, Comparendo> darTablaHashLinearProbing()
+	{
+		LinearProbingHash<LlaveComparendo, Comparendo> tablaLinearProbing = new LinearProbingHash<LlaveComparendo, Comparendo>();
+		datos1 = cargarDatos();
+
+		Iterator<Comparendo> it = datos1.iterator();
+		while(it.hasNext())
+		{
+			for(int i = 0; i < datos1.size(); i++)
+			{
+				Comparendo elementoActual = it.next();
+				tablaLinearProbing.put(new LlaveComparendo(elementoActual.getFecha_hora(), elementoActual.getClase_vehi(), elementoActual.getInfraccion()), new Comparendo(elementoActual.getObjective(), elementoActual.getFecha_hora(), elementoActual.getDes_infrac(), elementoActual.getMedio_dete(), elementoActual.getClase_vehi(), elementoActual.getTipo_servi(), elementoActual.getInfraccion(), elementoActual.getLocalidad(), elementoActual.getMunicipio(), elementoActual.getLongitud(), elementoActual.getLatitud()));
+			}
+		}
+
+		return tablaLinearProbing;
+	}
+	
+	/**
+	 * Se utiliza una tabla de hash con encademaniento sencillo se recorre se obtiene la llava del dia y el valor correspondiente
+	 * @param pMes Mes que ingresa el usuario como parametro
+	 * @param pDia Dia que ingresa el usuario como parametro
+	 * @return Tabla de hash con los valores guardados respectivamente
+	 */
+	public SeparteChainingHash2<String, Comparendo> darComparendosPorDia(int pMes, String pDia)
+	{
+		Calendar calendar = Calendar.getInstance();
+		LinearProbingHash<LlaveComparendo, Comparendo> tablaLinearProbing = darTablaHashLinearProbing();
+		SeparteChainingHash2<String, Comparendo> tablaSeparateChaining = new SeparteChainingHash2<String, Comparendo>();
+		
+		Iterator<Comparendo> it = tablaLinearProbing.values().iterator();
+		while(it.hasNext())
+		{
+			Comparendo elementoActual = it.next();
+			calendar.setTime(elementoActual.getFecha_hora());
+			int dayofWeek = calendar.get(Calendar.DAY_OF_WEEK);
+			int month1 = calendar.get(Calendar.MONTH);
+			
+			if(pDia.equals("L") && dayofWeek == 2)
+			{
+				if(month1 == 0 && pMes == 1)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 1 && pMes == 2)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 2 && pMes == 3)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 3 && pMes == 4)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 4 && pMes == 5)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 5 && pMes == 6)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 6 && pMes == 7)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 7 && pMes == 8)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 8 && pMes == 9)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 9 && pMes == 10)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 10 && pMes == 11)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+				else if(month1 == 11 && pMes == 12)
+				{
+					tablaSeparateChaining.put("L", elementoActual);
+				}
+			}
+			else if(pDia.equals("M") && dayofWeek == 3)
+			{
+				if(month1 == 0 && pMes == 1)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 1 && pMes == 2)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 2 && pMes == 3)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 3 && pMes == 4)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 4 && pMes == 5)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 5 && pMes == 6)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 6 && pMes == 7)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 7 && pMes == 8)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 8 && pMes == 9)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 9 && pMes == 10)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 10 && pMes == 11)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+				else if(month1 == 11 && pMes == 12)
+				{
+					tablaSeparateChaining.put("M", elementoActual);
+				}
+			}
+			else if(pDia.equals("I") && dayofWeek == 4)
+			{
+				if(month1 == 0 && pMes == 1)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 1 && pMes == 2)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 2 && pMes == 3)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 3 && pMes == 4)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 4 && pMes == 5)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 5 && pMes == 6)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 6 && pMes == 7)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 7 && pMes == 8)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 8 && pMes == 9)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 9 && pMes == 10)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 10 && pMes == 11)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+				else if(month1 == 11 && pMes == 12)
+				{
+					tablaSeparateChaining.put("I", elementoActual);
+				}
+			}
+			else if(pDia.equals("J") && dayofWeek == 5)
+			{
+				if(month1 == 0 && pMes == 1)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 1 && pMes == 2)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 2 && pMes == 3)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 3 && pMes == 4)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 4 && pMes == 5)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 5 && pMes == 6)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 6 && pMes == 7)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 7 && pMes == 8)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 8 && pMes == 9)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 9 && pMes == 10)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 10 && pMes == 11)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+				else if(month1 == 11 && pMes == 12)
+				{
+					tablaSeparateChaining.put("J", elementoActual);
+				}
+			}
+			else if(pDia.equals("V") && dayofWeek == 6)
+			{
+				if(month1 == 0 && pMes == 1)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 1 && pMes == 2)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 2 && pMes == 3)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 3 && pMes == 4)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 4 && pMes == 5)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 5 && pMes == 6)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 6 && pMes == 7)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 7 && pMes == 8)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 8 && pMes == 9)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 9 && pMes == 10)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 10 && pMes == 11)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+				else if(month1 == 11 && pMes == 12)
+				{
+					tablaSeparateChaining.put("V", elementoActual);
+				}
+			}
+			else if(pDia.equals("S") && dayofWeek == 7)
+			{
+				if(month1 == 0 && pMes == 1)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 1 && pMes == 2)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 2 && pMes == 3)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 3 && pMes == 4)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 4 && pMes == 5)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 5 && pMes == 6)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 6 && pMes == 7)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 7 && pMes == 8)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 8 && pMes == 9)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 9 && pMes == 10)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 10 && pMes == 11)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+				else if(month1 == 11 && pMes == 12)
+				{
+					tablaSeparateChaining.put("S", elementoActual);
+				}
+			}
+			else if(pDia.equals("D") && dayofWeek == 1)
+			{
+				if(month1 == 0 && pMes == 1)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 1 && pMes == 2)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 2 && pMes == 3)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 3 && pMes == 4)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 4 && pMes == 5)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 5 && pMes == 6)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 6 && pMes == 7)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 7 && pMes == 8)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 8 && pMes == 9)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 9 && pMes == 10)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 10 && pMes == 11)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+				else if(month1 == 11 && pMes == 12)
+				{
+					tablaSeparateChaining.put("D", elementoActual);
+				}
+			}
+		}
+		return tablaSeparateChaining;
 	}
 
 	// Metodos de Ordenamientos - MergeSort

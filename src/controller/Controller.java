@@ -1,10 +1,13 @@
 package controller;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Scanner;
+
 
 import model.ComparadorTipoServicio;
 import model.Comparendo;
+import model.data_structures.SeparteChainingHash2;
 import model.logic.Modelo;
 import view.View;
 
@@ -90,6 +93,22 @@ public class Controller {
 			
 		    // Requerimiento 1B
 			case 3:
+				System.out.println("Ingrese el numero del mes a ser la consulta debe ser del 1 al 12: ");
+				int entrada2 = lector.nextInt();
+				System.out.println("Ingrese el dia de la semana a ser la consulta debe ser L,M,I,J,V,S,D: ");
+				String entrada3 = lector.next();
+				int n =0;
+				
+				System.out.println("Los comparendos consultados en el mes " + entrada2 + " en el dia " + entrada3 + " son:");
+				SeparteChainingHash2<String, Comparendo> tablaHash = modelo.darComparendosPorDia(entrada2, entrada3);
+				Iterator<Comparendo> it = tablaHash.Vals().iterator();
+				
+				while(it.hasNext() && n < 20)
+				{
+					Comparendo comparendoActual = it.next();
+					System.out.println(comparendoActual.getObjective() + ", " +  comparendoActual.getTipo_servi() + ", " + comparendoActual.getInfraccion() + ", " + comparendoActual.getFecha_hora() + ", " + comparendoActual.getClase_vehi());
+					n++;
+				}
 				break;
 				
 			// Requerimiento 1C

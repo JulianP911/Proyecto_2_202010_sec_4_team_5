@@ -194,6 +194,5 @@ public class SeparateChainingHash <K extends Comparable<K>, V >
 		}
 
 		return queue;
-
 	}
 }
