@@ -1,5 +1,8 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -7,6 +10,7 @@ import java.util.Scanner;
 
 import model.ComparadorTipoServicio;
 import model.Comparendo;
+import model.LlaveComparendo2;
 import model.data_structures.SeparteChainingHash2;
 import model.logic.Modelo;
 import view.View;
@@ -113,6 +117,36 @@ public class Controller {
 				
 			// Requerimiento 1C
 			case 4:
+				view.printMessage("Por favor ingrese la fecha inferior en el formato (YYYY/MM/DD-HH:MM:ss): ");
+				String entrada4 = lector.next();
+				view.printMessage("Por favor ingrese la fecha superior en el formato (YYYY/MM/DD-HH:MM:ss): ");
+				String entrada5 = lector.next();
+				view.printMessage("Por favor ingrese la localidad a ser consultada: ");
+				
+		        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); 
+		        try 
+		        {
+		        	String entrada6 = reader.readLine();
+		        	
+		        	Iterator<LlaveComparendo2> it1 = modelo.darComparendosRangoFechayLocalidad(entrada4, entrada5).keys().iterator();
+					Iterator<Comparendo> it2 = modelo.darComparendosRangoFechayLocalidad(entrada4, entrada5).Values().iterator();
+					int x = 0;
+					while(it1.hasNext() && it2.hasNext() && x < 20)
+					{
+						Comparendo Comparendo = it2.next();
+						
+						if(Comparendo.getLocalidad().equals(entrada6))
+						{
+							view.printMessage(Comparendo.getObjective() + ", " + Comparendo.getTipo_servi() + ", " +
+		                              Comparendo.getInfraccion() + ", " + Comparendo.getFecha_hora() + ", " + Comparendo.getClase_vehi());
+							x++;
+						}
+					}
+				} 
+		        catch (IOException e) 
+		        {
+					e.printStackTrace();
+				} 
 				break;
 			
 			// Requerimiento 2A

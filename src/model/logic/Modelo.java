@@ -19,9 +19,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import model.Comparendo;
 import model.LlaveComparendo;
+import model.LlaveComparendo2;
 import model.data_structures.LinearProbingHash;
 import model.data_structures.MaxColaCP;
 import model.data_structures.MaxHeapCP;
+import model.data_structures.RedBlackBST;
 import model.data_structures.SeparteChainingHash2;
 
 /**
@@ -624,6 +626,69 @@ public class Modelo
 			}
 		}
 		return tablaSeparateChaining;
+	}
+	
+	/**
+	 * Convierte la lista de objetos cargados a un arbol rojo - negro
+	 */
+	public RedBlackBST<LlaveComparendo2, Comparendo> darArbolRedBlackLlave2()
+	{
+		RedBlackBST<LlaveComparendo2, Comparendo> arbolRedBlack = new RedBlackBST<LlaveComparendo2, Comparendo>();
+		datos1 = cargarDatos();
+
+		Iterator<Comparendo> it = datos1.iterator();
+		while(it.hasNext())
+		{
+			for(int i = 0; i < datos1.size(); i++)
+			{
+				Comparendo elementoActual = it.next();
+				LlaveComparendo2 llaveActual = new LlaveComparendo2(elementoActual.getFecha_hora());
+				Comparendo comparendoActual = new Comparendo(elementoActual.getObjective(), elementoActual.getFecha_hora(), elementoActual.getDes_infrac(), elementoActual.getMedio_dete(), elementoActual.getClase_vehi(), elementoActual.getTipo_servi(), elementoActual.getInfraccion(), elementoActual.getLocalidad(), elementoActual.getMunicipio(), elementoActual.getLongitud(), elementoActual.getLatitud());
+				arbolRedBlack.put(llaveActual, comparendoActual);
+			}
+		}
+
+		return arbolRedBlack;
+	}
+	
+	/**
+	 * Retorna un arbol rojo - negro con los comparendos que cumple con las fechas dentro de los rangos
+	 * @param pFechaInf Fecha inferior ingresada por el usuario
+	 * @param pFechaSup Fecha superior ingresa por el usuario
+	 * @return Arbol ROjo-Negro con los comparendos
+	 */
+	public RedBlackBST<LlaveComparendo2, Comparendo> darComparendosRangoFechayLocalidad(String pFechaInf, String pFechaSup)
+	{
+		String fechaInf = pFechaInf.replace('-', ' ');
+		String fechaSup = pFechaSup.replace('-', ' ');
+		
+		SimpleDateFormat parser=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		RedBlackBST<LlaveComparendo2, Comparendo> rangoComparendosFecha = new RedBlackBST<LlaveComparendo2, Comparendo>();
+		try 
+		{
+			Date fechaInf1 = parser.parse(fechaInf);
+			Date fechaSup1 = parser.parse(fechaSup);
+			
+			Iterator<LlaveComparendo2> it1 = darArbolRedBlackLlave2().keys().iterator();
+			Iterator<Comparendo> it2 = darArbolRedBlackLlave2().Values().iterator();
+			
+			while(it1.hasNext() && it2.hasNext())
+			{
+				LlaveComparendo2 llaveComparendo =  it1.next();
+				Comparendo Comparendo = it2.next();
+				
+				if(llaveComparendo.getFecha_Hora().after(fechaInf1)  && llaveComparendo.getFecha_Hora().before(fechaSup1))
+				{
+					rangoComparendosFecha.put(llaveComparendo, Comparendo);
+				}
+			}
+		} 
+		catch (ParseException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return rangoComparendosFecha;
 	}
 
 	// Metodos de Ordenamientos - MergeSort
