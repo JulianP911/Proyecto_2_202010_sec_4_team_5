@@ -22,6 +22,7 @@ import model.Comparendo;
 import model.LlaveComparendo;
 import model.LlaveComparendo2;
 import model.data_structures.LinearProbingHash;
+import model.data_structures.LinkedQueue;
 import model.data_structures.MaxColaCP;
 import model.data_structures.MaxHeapCP;
 import model.data_structures.RedBlackBST;
@@ -226,6 +227,71 @@ public class Modelo
 
 		return nuevo;
 	}
+
+	public LinkedQueue<Comparendo> cargarDatosCola()
+	{
+		LinkedQueue<Comparendo> cola = new LinkedQueue<Comparendo>();
+		datos1 = cargarDatos();
+		shuffle(datos1);
+
+		Iterator<Comparendo> it = datos1.iterator();
+		while(it.hasNext())
+		{
+			for(int i = 0; i < datos1.size(); i++)
+			{
+				Comparendo elementoActual = it.next();
+				cola.enqueue(elementoActual);
+			}
+		}
+
+		return cola;
+	}
+
+	/**
+	 * Dar informacion de los costos de penalización y tiempo promedio de ejecucion de los comparendos
+	 * @return Arreglo con la informacion correspondiente
+	 */
+	public int[] darCostoPenalizacionesyDias()
+	{
+		LinkedQueue<Comparendo> comparendos = cargarDatosCola();
+		int[] informacion = new int[2];
+		int costoPenalizacion = 0;
+		int numComparendos = 0;
+		int numDia = 0;
+
+		Iterator<Comparendo> it = comparendos.iterator();
+
+
+		while(it.hasNext())
+		{
+			Comparendo actualComparendo = it.next();
+			if(actualComparendo.getDes_infrac().equals("SERA INMOVILIZADO") || actualComparendo.getDes_infrac().equals("SERÁ INMOVILIZADO"))
+			{
+				costoPenalizacion += (400 * numDia);
+			}
+			else if(actualComparendo.getDes_infrac().equals("LICENCIA DE CONDUCCIÓN"))
+			{
+				costoPenalizacion += (40 * numDia);
+			}
+			else
+			{
+				costoPenalizacion += (4 * numDia);
+			}
+			numComparendos++;
+
+			if(numComparendos > 1500)
+			{
+				numDia++;
+				numComparendos = 0;
+			}
+		}
+
+		informacion[0] = costoPenalizacion;
+		informacion[1] =(comparendos.getSize()-(numDia*1500))/numDia;
+
+		return informacion;
+	}
+
 
 	/**
 	 * Convierte la lista de objetos cargados en una tabla de hash - Linear Probing
@@ -856,5 +922,115 @@ public class Modelo
 	public int daysBetween(Date d1, Date d2)
 	{
 		return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+	}
+
+	/**
+	 * Retorna una grafica ASCII (Histograma) que muestre el número total de comparendos por un rango de fechas representados por un String de caracteres ‘*’
+	 * @param pFecha1 Fecha 1 desde donde comienza el rango
+	 * @return Arreglo de Strings con la información a devolver en cada renglón del histograma
+	 */
+	public String[] darNumeroProcesados(Comparendo[] comparendos, Date pFecha1) 
+	{
+		int contador = 0;
+		int numeroCom = 0;
+		int espaciosArreglo = 365;
+		int[] numeroComparendos = new int[espaciosArreglo];
+		String[] numeroAsteriscos = new String[espaciosArreglo];
+
+		try 
+		{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			String fechaComoCadena1 = sdf.format(pFecha1);
+			Date fecha1 = sdf.parse(fechaComoCadena1);
+
+			for(int i = contador; i < espaciosArreglo; i++)
+			{
+				for(int j = 0; j < comparendos.length; j++)
+				{
+					String fechaComoCadena2 = sdf.format(comparendos[j].getFecha_hora());
+					Date fecha2 = sdf.parse(fechaComoCadena2);
+					if(fecha2.equals(fecha1))
+					{
+						numeroCom++;
+					}
+				}
+
+				numeroComparendos[i] = numeroCom;
+				fecha1 = addDays(fecha1, 1);
+				numeroCom = 0;
+			}
+
+			for(int i = contador; i < numeroComparendos.length; i++)
+			{
+				numeroAsteriscos[i] = "";
+
+				while(numeroComparendos[i] > 0)
+				{
+					numeroAsteriscos[i] += "**";
+					numeroComparendos[i] -= 50;
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}	
+
+		return numeroAsteriscos;
+	}
+	
+	/**
+	 * Retorna una grafica ASCII (Histograma) que muestre el número total de comparendos por un rango de fechas representados por un String de caracteres ‘*’
+	 * @param pFecha1 Fecha 1 desde donde comienza el rango
+	 * @return Arreglo de Strings con la información a devolver en cada renglón del histograma
+	 */
+	public String[] darNumeroEspera(Comparendo[] comparendos, Date pFecha1) 
+	{
+		int contador = 0;
+		int numeroCom = 0;
+		int espaciosArreglo = 365;
+		int[] numeroComparendos = new int[espaciosArreglo];
+		String[] numeroAsteriscos = new String[espaciosArreglo];
+
+		try 
+		{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			String fechaComoCadena1 = sdf.format(pFecha1);
+			Date fecha1 = sdf.parse(fechaComoCadena1);
+
+			for(int i = contador; i < espaciosArreglo; i++)
+			{
+				for(int j = 0; j < comparendos.length; j++)
+				{
+					String fechaComoCadena2 = sdf.format(comparendos[j].getFecha_hora());
+					Date fecha2 = sdf.parse(fechaComoCadena2);
+					if(fecha2.equals(fecha1))
+					{
+						numeroCom++;
+					}
+				}
+
+				numeroComparendos[i] = numeroCom;
+				fecha1 = addDays(fecha1, 1);
+				numeroCom = 0;
+			}
+
+			for(int i = contador; i < numeroComparendos.length; i++)
+			{
+				numeroAsteriscos[i] = "";
+
+				while(numeroComparendos[i] > 0)
+				{
+					numeroAsteriscos[i] += "###";
+					numeroComparendos[i] -= 50;
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}	
+
+		return numeroAsteriscos;
 	}
 }

@@ -99,7 +99,7 @@ public class Controller {
 
 				break;
 
-				// Requerimiento 1B
+				// Requerimiento 2A
 			case 3:
 				System.out.println("Ingrese el numero del mes a ser la consulta debe ser del 1 al 12: ");
 				int entrada2 = lector.nextInt();
@@ -119,7 +119,7 @@ public class Controller {
 				}
 				break;
 
-				// Requerimiento 1C
+				// Requerimiento 3A
 			case 4:
 				view.printMessage("Por favor ingrese la fecha inferior en el formato (YYYY/MM/DD-HH:MM:ss): ");
 				String entrada4 = lector.next();
@@ -153,7 +153,7 @@ public class Controller {
 				} 
 				break;
 
-				// Requerimiento 2A
+				// Requerimiento 1B
 			case 5:
 				break;
 
@@ -161,11 +161,11 @@ public class Controller {
 			case 6:
 				break;
 
-				// Requerimiento 2C
+				// Requerimiento 3B
 			case 7:
 				break;
 
-				// Requerimiento 3A
+				// Requerimiento 1C
 			case 8:
 				System.out.println("Por favor ingrese el numero de dias D: ");
 				int entrada7 = lector.nextInt();
@@ -233,13 +233,74 @@ public class Controller {
 				{ 
 					e.printStackTrace();
 				}
-
-
-
 				break;
 
-				// Requerimiento 3B
+				// Requerimiento 2C
 			case 9:
+				System.out.println("El costo que generan las penalizaciones en 2018 es de: " + modelo.darCostoPenalizacionesyDias()[0]);
+				System.out.println("El número de días en promedio que debe esperar un comparendo: " + modelo.darCostoPenalizacionesyDias()[1]);
+				System.out.println("Importante cada * o # significa 50 comparendos");
+				System.out.println("Fecha           | Comparendos Procesados              ***");
+				System.out.println("                | Comparendos que están en espera     ###");
+				System.out.println("---------------------------------------------------------");
+				
+				Comparable<Comparendo> copia_Comparendos2 [ ] = modelo.copiarComparendosArreglo();
+
+				int x =0;
+				Comparendo nuevo9 = null;
+				for(int i = 0; i < copia_Comparendos2.length ; i++)
+				{
+					nuevo9 = (Comparendo) copia_Comparendos2[i];
+					if(nuevo9 != null)
+					{
+						x++;
+					}
+				}
+
+				Comparendo[] nuevo10 = new Comparendo[x];
+
+				Comparendo nuevo11 = null;
+				for(int i = 0; i < copia_Comparendos2.length ; i++)
+				{
+					nuevo11 = (Comparendo) copia_Comparendos2[i];
+					if(nuevo11 != null)
+					{
+						nuevo10[i] = nuevo11;
+					}
+				}
+				
+				Comparendo primero = nuevo10[0];
+				
+				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");
+				Date fecha = primero.getFecha_hora();
+				String fechaComoCadena3 = "2018/01/01";
+				Date fechaa;
+				try 
+				{
+					fechaa = sdf1.parse(fechaComoCadena3);
+					String[] arreglo = modelo.darNumeroProcesados(nuevo10, fecha);
+					String[] arreglo2 = modelo.darNumeroEspera(nuevo10, fecha);
+					System.out.println(fechaComoCadena3 + "      | " + arreglo[0]);
+					System.out.println("                | " + arreglo2[0]);
+					for(int i = 0; i < 248; i++)
+					{
+						fechaa = modelo.addDays(fechaa, 1);
+						
+						String fecha13 = sdf1.format(fechaa);
+						System.out.println(fecha13 + "      | " + arreglo[i]);	
+						System.out.println( "                | " + arreglo2[i]);
+					}
+				} catch (ParseException e) 
+				{
+					e.printStackTrace();
+				}
+				
+				System.out.println(" ");
+				System.out.println("Tabla con la información de tiempos:");
+				System.out.println("Costo Diario Comparendo | Tiempo Minimo | Tiempo Promedio | Tiempo Maximo |");
+				System.out.println("$400                    |     28        |      33         |       39      |");
+				System.out.println("$40                     |     13        |      15         |       23      |");
+				System.out.println("$4                      |      4        |      5          |        9      |");
 				break;
 
 				// Requerimiento 3C

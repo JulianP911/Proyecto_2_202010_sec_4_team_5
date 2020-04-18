@@ -8,3 +8,5 @@ códigos:
 JP: 201913677
 PP: 201822920
 
+Este proyecto se trabajo con el archivo data de 50000 datos, debido a que el archivo grande no corre en nuestros computadores por la potencia de la RAM
+
