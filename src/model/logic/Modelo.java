@@ -17,6 +17,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+
 import model.Comparendo;
 import model.LlaveComparendo;
 import model.LlaveComparendo2;
@@ -225,7 +226,7 @@ public class Modelo
 
 		return nuevo;
 	}
-	
+
 	/**
 	 * Convierte la lista de objetos cargados en una tabla de hash - Linear Probing
 	 */
@@ -246,7 +247,7 @@ public class Modelo
 
 		return tablaLinearProbing;
 	}
-	
+
 	/**
 	 * Se utiliza una tabla de hash con encademaniento sencillo se recorre se obtiene la llava del dia y el valor correspondiente
 	 * @param pMes Mes que ingresa el usuario como parametro
@@ -258,7 +259,7 @@ public class Modelo
 		Calendar calendar = Calendar.getInstance();
 		LinearProbingHash<LlaveComparendo, Comparendo> tablaLinearProbing = darTablaHashLinearProbing();
 		SeparteChainingHash2<String, Comparendo> tablaSeparateChaining = new SeparteChainingHash2<String, Comparendo>();
-		
+
 		Iterator<Comparendo> it = tablaLinearProbing.values().iterator();
 		while(it.hasNext())
 		{
@@ -266,7 +267,7 @@ public class Modelo
 			calendar.setTime(elementoActual.getFecha_hora());
 			int dayofWeek = calendar.get(Calendar.DAY_OF_WEEK);
 			int month1 = calendar.get(Calendar.MONTH);
-			
+
 			if(pDia.equals("L") && dayofWeek == 2)
 			{
 				if(month1 == 0 && pMes == 1)
@@ -627,7 +628,7 @@ public class Modelo
 		}
 		return tablaSeparateChaining;
 	}
-	
+
 	/**
 	 * Convierte la lista de objetos cargados a un arbol rojo - negro
 	 */
@@ -650,7 +651,7 @@ public class Modelo
 
 		return arbolRedBlack;
 	}
-	
+
 	/**
 	 * Retorna un arbol rojo - negro con los comparendos que cumple con las fechas dentro de los rangos
 	 * @param pFechaInf Fecha inferior ingresada por el usuario
@@ -661,22 +662,22 @@ public class Modelo
 	{
 		String fechaInf = pFechaInf.replace('-', ' ');
 		String fechaSup = pFechaSup.replace('-', ' ');
-		
+
 		SimpleDateFormat parser=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		RedBlackBST<LlaveComparendo2, Comparendo> rangoComparendosFecha = new RedBlackBST<LlaveComparendo2, Comparendo>();
 		try 
 		{
 			Date fechaInf1 = parser.parse(fechaInf);
 			Date fechaSup1 = parser.parse(fechaSup);
-			
+
 			Iterator<LlaveComparendo2> it1 = darArbolRedBlackLlave2().keys().iterator();
 			Iterator<Comparendo> it2 = darArbolRedBlackLlave2().Values().iterator();
-			
+
 			while(it1.hasNext() && it2.hasNext())
 			{
 				LlaveComparendo2 llaveComparendo =  it1.next();
 				Comparendo Comparendo = it2.next();
-				
+
 				if(llaveComparendo.getFecha_Hora().after(fechaInf1)  && llaveComparendo.getFecha_Hora().before(fechaSup1))
 				{
 					rangoComparendosFecha.put(llaveComparendo, Comparendo);
@@ -687,9 +688,33 @@ public class Modelo
 		{
 			e.printStackTrace();
 		}
-		
+
 		return rangoComparendosFecha;
 	}
+
+	/**
+	 * Copiar comparendos en arreglo para poder ser utilizado
+	 * @return Arreglo de comparendos 
+	 */
+	public Comparable<Comparendo>[] copiarComparendosArreglo()
+	{
+		datos1 = cargarDatos();
+
+		@SuppressWarnings("unchecked")
+		Comparable<Comparendo>[] nuevo = (Comparable<Comparendo>[]) new Comparable[datos1.size()];
+
+		Iterator<Comparendo> it = datos1.iterator();
+		while(it.hasNext())
+		{
+			for(int i = 0; i < datos1.size(); i++)
+			{
+				Comparendo elementoActual = it.next();
+				nuevo[i] = new Comparendo(elementoActual.getObjective(), elementoActual.getFecha_hora(), elementoActual.getDes_infrac(), elementoActual.getMedio_dete(), elementoActual.getClase_vehi(), elementoActual.getTipo_servi(), elementoActual.getInfraccion(), elementoActual.getLocalidad(), elementoActual.getMunicipio(), elementoActual.getLongitud(), elementoActual.getLatitud());
+			}
+		}
+
+		return nuevo;
+	}	
 
 	// Metodos de Ordenamientos - MergeSort
 
@@ -765,5 +790,71 @@ public class Modelo
 
 		for (index = 0; index < n; index++)
 			a[from + index] = (E) values[index];
+	}
+
+	/**
+	 * Retorna una grafica ASCII (Histograma) que muestre el número total de comparendos por un rango de fechas representados por un String de caracteres ‘*’
+	 * @param pFecha1 Fecha 1 desde donde comienza el rango
+	 * @param pFecha2 Fecha 2 desde donde termina el rango
+	 * @param pDias Dias en los que se toma el rango
+	 * @return Arreglo de Strings con la información a devolver en cada renglón del histograma
+	 */
+	public String[] darNumeroComparendos(Comparendo[] comparendos, Date pFecha1, Date pFecha2, int pDias) 
+	{
+		int contador = 0;
+		int numeroCompa = 0;
+		int espaciosArreglo = 365 / pDias;
+		int[] numeroComparendos = new int[espaciosArreglo];
+		String[] numeroAsteriscos = new String[espaciosArreglo];
+
+		for(int i = contador; i < espaciosArreglo; i++)
+		{
+			for(int j = 0; j < comparendos.length; j++)
+			{
+				if(comparendos[j].getFecha_hora().after(pFecha1) && comparendos[j].getFecha_hora().before(pFecha2))
+				{
+					numeroCompa++;
+				}
+			}
+			numeroComparendos[i] = numeroCompa;
+			pFecha1 = addDays(pFecha2, 1);
+			pFecha2 = addDays(pFecha2, pDias);
+			numeroCompa = 0;
+		}
+
+		for(int i = contador; i < numeroComparendos.length; i++)
+		{
+			numeroAsteriscos[i] = "";
+
+			while(numeroComparendos[i] > 0)
+			{
+				numeroAsteriscos[i] += "*";
+				numeroComparendos[i] -= 100;
+			}
+		}	
+
+		return numeroAsteriscos;		
+	}
+
+	/**
+	 * Incremetar la fecha en los dias correspondiente
+	 * @param date
+	 * @param days
+	 * @return
+	 */
+	public Date addDays(Date date, int days)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, days); 
+		return cal.getTime();
+	}
+
+	/*
+	 * Dias entre dos fechas ingresadas por los usuarios
+	 */
+	public int daysBetween(Date d1, Date d2)
+	{
+		return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
 	}
 }

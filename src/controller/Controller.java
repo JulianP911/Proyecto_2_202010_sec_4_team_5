@@ -3,11 +3,15 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
 
-
+import model.ComparadorFechaComparendo;
 import model.ComparadorTipoServicio;
 import model.Comparendo;
 import model.LlaveComparendo2;
@@ -43,7 +47,7 @@ public class Controller {
 
 			int option = lector.nextInt();
 			switch(option){
-			
+
 			// Lectura de los archivos
 			case 1:
 				modelo.darColaPrioridadMaxCP();
@@ -52,11 +56,11 @@ public class Controller {
 				view.printMessage("El comparendo con el mayor OBJECTID es: " + modelo.darObjectidMayor() + " \n");
 				break;
 
-			// Requerimiento 1A
+				// Requerimiento 1A
 			case 2:
 				System.out.println("Ingrese el numero de comparendos a consultar con mayor gravedad: ");
 				int entrada1 = lector.nextInt();
-				
+
 				Comparable<Comparendo> copia_Comparendos [ ] = modelo.darComparendosMayorGravedad();
 
 				int j =0;
@@ -81,10 +85,10 @@ public class Controller {
 						nuevo[i] = nuevo2;
 					}
 				}
-				
+
 				Comparator<Comparendo> comp = new ComparadorTipoServicio();
 				Modelo.sort(nuevo, comp);
-				
+
 				view.printMessage("Estos son los comparendos con mayor gravedad: \n");
 
 				for(int i = 0; i < entrada1; i++)
@@ -94,19 +98,19 @@ public class Controller {
 				}
 
 				break;
-			
-		    // Requerimiento 1B
+
+				// Requerimiento 1B
 			case 3:
 				System.out.println("Ingrese el numero del mes a ser la consulta debe ser del 1 al 12: ");
 				int entrada2 = lector.nextInt();
 				System.out.println("Ingrese el dia de la semana a ser la consulta debe ser L,M,I,J,V,S,D: ");
 				String entrada3 = lector.next();
 				int n =0;
-				
+
 				System.out.println("Los comparendos consultados en el mes " + entrada2 + " en el dia " + entrada3 + " son:");
 				SeparteChainingHash2<String, Comparendo> tablaHash = modelo.darComparendosPorDia(entrada2, entrada3);
 				Iterator<Comparendo> it = tablaHash.Vals().iterator();
-				
+
 				while(it.hasNext() && n < 20)
 				{
 					Comparendo comparendoActual = it.next();
@@ -114,66 +118,135 @@ public class Controller {
 					n++;
 				}
 				break;
-				
-			// Requerimiento 1C
+
+				// Requerimiento 1C
 			case 4:
 				view.printMessage("Por favor ingrese la fecha inferior en el formato (YYYY/MM/DD-HH:MM:ss): ");
 				String entrada4 = lector.next();
 				view.printMessage("Por favor ingrese la fecha superior en el formato (YYYY/MM/DD-HH:MM:ss): ");
 				String entrada5 = lector.next();
 				view.printMessage("Por favor ingrese la localidad a ser consultada: ");
-				
-		        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); 
-		        try 
-		        {
-		        	String entrada6 = reader.readLine();
-		        	
-		        	Iterator<LlaveComparendo2> it1 = modelo.darComparendosRangoFechayLocalidad(entrada4, entrada5).keys().iterator();
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); 
+				try 
+				{
+					String entrada6 = reader.readLine();
+
+					Iterator<LlaveComparendo2> it1 = modelo.darComparendosRangoFechayLocalidad(entrada4, entrada5).keys().iterator();
 					Iterator<Comparendo> it2 = modelo.darComparendosRangoFechayLocalidad(entrada4, entrada5).Values().iterator();
 					int x = 0;
 					while(it1.hasNext() && it2.hasNext() && x < 20)
 					{
 						Comparendo Comparendo = it2.next();
-						
+
 						if(Comparendo.getLocalidad().equals(entrada6))
 						{
 							view.printMessage(Comparendo.getObjective() + ", " + Comparendo.getTipo_servi() + ", " +
-		                              Comparendo.getInfraccion() + ", " + Comparendo.getFecha_hora() + ", " + Comparendo.getClase_vehi());
+									Comparendo.getInfraccion() + ", " + Comparendo.getFecha_hora() + ", " + Comparendo.getClase_vehi());
 							x++;
 						}
 					}
 				} 
-		        catch (IOException e) 
-		        {
+				catch (IOException e) 
+				{
 					e.printStackTrace();
 				} 
 				break;
-			
-			// Requerimiento 2A
+
+				// Requerimiento 2A
 			case 5:
 				break;
-			
-			// Requerimiento 2B
+
+				// Requerimiento 2B
 			case 6:
 				break;
-				
-			// Requerimiento 2C
+
+				// Requerimiento 2C
 			case 7:
 				break;
-			
-			// Requerimiento 3A
+
+				// Requerimiento 3A
 			case 8:
+				System.out.println("Por favor ingrese el numero de dias D: ");
+				int entrada7 = lector.nextInt();
+
+				Comparable<Comparendo> copia_Comparendos1 [ ] = modelo.copiarComparendosArreglo();
+
+				int z =0;
+				Comparendo nuevo6 = null;
+				for(int i = 0; i < copia_Comparendos1.length ; i++)
+				{
+					nuevo6 = (Comparendo) copia_Comparendos1[i];
+					if(nuevo6 != null)
+					{
+						z++;
+					}
+				}
+
+				Comparendo[] nuevo7 = new Comparendo[z];
+
+				Comparendo nuevo8 = null;
+				for(int i = 0; i < copia_Comparendos1.length ; i++)
+				{
+					nuevo8 = (Comparendo) copia_Comparendos1[i];
+					if(nuevo8 != null)
+					{
+						nuevo7[i] = nuevo8;
+					}
+				}
+
+				Comparator<Comparendo> comp1 = new ComparadorFechaComparendo();
+				Modelo.sort(nuevo7, comp1);
+
+				view.printMessage("Importante cada * representa 100 comparendos");
+				view.printMessage("Rango de fechas           | Comparendos durante el año");
+				view.printMessage("------------------------------------------------------");
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+
+				try 
+				{
+						Comparendo actual = nuevo7[0];
+						String fechaComoCadena1 = sdf.format(actual.getFecha_hora());
+						String original = fechaComoCadena1;
+						Calendar c = Calendar.getInstance();
+						c.setTime(sdf.parse(fechaComoCadena1));
+						c.add(Calendar.DATE, entrada7-1);  
+						fechaComoCadena1 = sdf.format(c.getTime());  
+						Date fecha1 = sdf.parse(original);
+						Date fecha2 = sdf.parse(fechaComoCadena1);
+						
+						System.out.println(original + "-" + fechaComoCadena1 + "     | " + modelo.darNumeroComparendos(nuevo7, fecha1, fecha2, entrada7)[0]);	
+						
+						for(int i = 1; i < (365/entrada7); i++)
+						{
+							fecha1 = modelo.addDays(fecha2, 1);
+							fecha2 = modelo.addDays(fecha2, entrada7+1);
+							
+							String fecha11 = sdf.format(fecha1);
+							String fecha12 = sdf.format(fecha2);
+							
+							System.out.println(fecha11 + "-" + fecha12 + "     | " + modelo.darNumeroComparendos(nuevo7, fecha1, fecha2, entrada7)[0]);	
+						}
+				} 
+				catch (ParseException e) 
+				{ 
+					e.printStackTrace();
+				}
+
+
+
 				break;
-			
-			// Requerimiento 3B
+
+				// Requerimiento 3B
 			case 9:
 				break;
-			
-			// Requerimiento 3C
+
+				// Requerimiento 3C
 			case 10:
 				break;
-			
-			// Cerrar el API
+
+				// Cerrar el API
 			case 11:
 				lector.close();
 				fin = true;
