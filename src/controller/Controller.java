@@ -51,7 +51,7 @@ public class Controller {
 			// Lectura de los archivos
 			case 1:
 				modelo.darColaPrioridadMaxCP();
-				view.printMessage("\nLectura de comparendorendos: ");
+				view.printMessage("\nLectura de comparendos: ");
 				view.printMessage("El numero de comparendos es de: " + modelo.darColaPrioridadMaxCP().size());
 				view.printMessage("El comparendo con el mayor OBJECTID es: " + modelo.darObjectidMayor() + " \n");
 				break;
