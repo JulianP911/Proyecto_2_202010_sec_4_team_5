@@ -32,6 +32,11 @@ import model.data_structures.SeparteChainingHash2;
  * Definicion del modelo del mundo
  *
  */
+
+/**
+ * Método para encontrar distancia harvesiana adaptada del código público en Github de Jason Winn
+ */
+
 public class Modelo 
 {
 	public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";
@@ -41,6 +46,7 @@ public class Modelo
 	 * Lista de comparendos
 	 */
 	private List<Comparendo> datos1;
+	
 
 	/**
 	 * Metodo que hace la carga de los datos comparendos
@@ -227,6 +233,87 @@ public class Modelo
 
 		return nuevo;
 	}
+	
+	public Comparendo[] darComparendosMasCercanos(int n)
+	{
+		
+		MaxColaCP<Comparendo> colaPrioridad = darColaPrioridadMaxCP();
+		ArrayList<Double> difs = new ArrayList<Double>();
+		ArrayList<Comparendo> difsas = new ArrayList<Comparendo>();
+
+
+		Iterator<Comparendo> it1 = colaPrioridad.iterator();
+		int z = 0;
+		while(it1.hasNext())
+		{
+			Comparendo este = it1.next();
+			
+			double xxx = haversin(este.getLatitud(), este.getLongitud());
+
+	        //System.out.println(xxx);        
+	        difs.add(xxx);      
+	        difsas.add(este);
+	        
+	        z++;
+		}
+		
+		//System.out.println(difs.get(0));
+		Collections.sort(difs);
+		//System.out.println(difs.get(0));
+
+		@SuppressWarnings("unchecked")
+		Comparendo[] nuevo = new Comparendo[n];
+
+		for(int p = 0; p < n; p++)
+		{
+			innerloop:
+			for(int i = 0; i < difs.size(); i++)
+			{
+				if(difs.get(p) == haversin(difsas.get(i).getLatitud(), difsas.get(i).getLongitud()))  
+				{
+					nuevo[p] = (Comparendo) difsas.get(i); 
+					//System.out.println("hola-" + nuevo[p].getObjective());
+					break innerloop;
+				}
+			}
+		}
+		/*
+		for(int p = 0; p < n; p++)
+		{
+			System.out.println( difs.get(p) );
+		}
+		for(int p = 0; p < n; p++)
+		{
+			System.out.println( haversin(nuevo[p].getLatitud(), nuevo[p].getLongitud()) );
+		}
+		 **/
+		return nuevo;
+		
+	}
+	
+	public static double haversin(double lat, double longi) 
+	{
+		double startLat = lat;
+		double startLong = longi;
+		double endLat = 4.647586;
+		double endLong = -74.078122;
+							
+		double dLat  = Math.toRadians((endLat - startLat));
+	    double dLong = Math.toRadians((endLong - startLong));
+
+	    startLat = Math.toRadians(startLat);
+	    endLat   = Math.toRadians(endLat);
+
+	    double a = haversin(dLat) + Math.cos(startLat) * Math.cos(endLat) * haversin(dLong);
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+	    return 6371 * c; // <-- d
+    }
+	
+	
+	public static double haversin(double val) {
+        return Math.pow(Math.sin(val / 2), 2);
+    }
 
 	public LinkedQueue<Comparendo> cargarDatosCola()
 	{
@@ -695,6 +782,75 @@ public class Modelo
 		return tablaSeparateChaining;
 	}
 
+	
+	public ArrayList<Comparendo>  darComparendosCondorito(String medio_dete, String clase_vehiculo, String tipo_servicio, String localidad)
+	{
+		ArrayList<Comparendo> devolver = new ArrayList<Comparendo>();
+		datos1 = cargarDatos();
+
+		Iterator<Comparendo> it = datos1.iterator();
+		while(it.hasNext())
+		{
+			Comparendo elementoActual = it.next();
+			
+			if(elementoActual.getMedio_dete().equals(medio_dete) && elementoActual.getClase_vehi().equals(clase_vehiculo) && elementoActual.getTipo_servi().equals(tipo_servicio) && elementoActual.getLocalidad().equals(localidad) )
+			{
+				devolver.add(elementoActual);
+			}
+			
+		}
+		
+		for (int i = 0; i < devolver.size(); i++) 
+        {
+            for (int j = i + 1; j < devolver.size(); j++) { 
+
+                if (devolver.get(i).getFecha_hora().compareTo( devolver.get(j).getFecha_hora() ) > 0) 
+                {
+                    Comparendo temp = devolver.get(i);
+                    devolver.set(i, devolver.get(j));
+                    devolver.set(j, temp);
+                }
+            }
+        }
+		
+		return devolver;
+	}
+	
+	
+	public ArrayList<Comparendo> darComparendosRangoLats(double inf, double sup, String clase_vehiculo)
+	{
+		ArrayList<Comparendo> devolver = new ArrayList<Comparendo>();
+		datos1 = cargarDatos();
+
+		Iterator<Comparendo> it = datos1.iterator();
+		while(it.hasNext())
+		{
+			Comparendo elementoActual = it.next();
+			
+			if(elementoActual.getClase_vehi().equals(clase_vehiculo) && elementoActual.getLatitud() <= sup && elementoActual.getLatitud() >= inf )
+			{
+				devolver.add(elementoActual);
+			}
+			
+		}
+		
+		for (int i = 0; i < devolver.size(); i++) 
+        {
+            for (int j = i + 1; j < devolver.size(); j++) { 
+
+                if (devolver.get(i).getLatitud() > devolver.get(j).getLatitud()) 
+                {
+                    Comparendo temp = devolver.get(i);
+                    devolver.set(i, devolver.get(j));
+                    devolver.set(j, temp);
+                }
+            }
+        }
+		
+		return devolver;
+	}
+	
+	
 	/**
 	 * Convierte la lista de objetos cargados a un arbol rojo - negro
 	 */
@@ -1033,4 +1189,6 @@ public class Modelo
 
 		return numeroAsteriscos;
 	}
+	
+	
 }

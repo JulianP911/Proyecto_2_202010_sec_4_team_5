@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -155,17 +156,119 @@ public class Controller {
 
 				// Requerimiento 1B
 			case 5:
+				
+				System.out.println("Ingrese el numero de comparendos más cercanos a consultar: ");
+				int entrada10 = lector.nextInt();
+
+				Comparendo compas [ ] = modelo.darComparendosMasCercanos(entrada10);
+				
+				/**
+				  for (int i = 0; i < compas.length; i++)
+				 
+				{
+					//System.out.print(compas[i]);
+				}
+
+				int k = 0;
+				Comparendo nuevo100 = null;
+				for(int i = 0; i < compas.length ; i++)
+				{
+					nuevo100 = (Comparendo) compas[i];
+					if(nuevo100 != null)
+					{
+						k++;
+					}
+				}
+
+				Comparendo[] nuevo0 = new Comparendo[k];
+
+				Comparendo nuevo20 = null;
+				for(int i = 0; i < compas.length ; i++)
+				{
+					nuevo20 = (Comparendo) compas[i];
+					if(nuevo20 != null)
+					{
+						nuevo0[i] = nuevo20;
+					}
+				}
+				*/
+			//	Comparator<Comparendo> com = new ComparadorTipoServicio();
+				//Modelo.sort(nuevo0, com);
+
+				view.printMessage("Estos son los comparendos más cercanos: \n");
+
+				for(int i = 0; i < entrada10; i++)
+				{
+					Comparendo nuevo30 = (Comparendo) compas[i];
+					System.out.println(nuevo30.getObjective() + ", " + nuevo30.getTipo_servi() + ", " + nuevo30.getInfraccion() + ", " + nuevo30.getFecha_hora() + ", " + nuevo30.getClase_vehi() + " --- fue puesto en latitud: " + nuevo30.getLatitud() + ", longitud: " + nuevo30.getLongitud() );
+				}
+				System.out.println();
+
 				break;
 
 				// Requerimiento 2B
 			case 6:
+				 
+				System.out.println("Por favor, ingrese el medio de detección a consultar (ej: LAPIZ, DEAP): ");
+				String entradaA = lector.next();
+				System.out.println("Ingrese la clase de vehículo a consultar (ej: AUTOMÓVIL, BICICLETA): ");
+				String entradaB = lector.next();
+				System.out.println("Ingrese el tipo de servicio a consultar (ej: Público, Particular): ");
+				String entradaC = lector.next();
+				System.out.println("Ingrese la localidad a consultar (ej: USAQUEN, KENNEDY): ");
+				String entradaD = lector.next();
+				
+				ArrayList<Comparendo> devolver = modelo.darComparendosCondorito(entradaA, entradaB, entradaC, entradaD);
+
+				if (devolver.size()==0)
+				{
+					System.out.println("No hay comparendos que cumplan con los criterios de búsqueda dados.");
+					System.out.println();
+				}
+				else
+				{
+					System.out.println("Los comparendos que cumplen con los criterios de búsqueda dados son:");
+				
+					for(int i = 0; i < devolver.size(); i++)
+					{
+						Comparendo comparendoActual = devolver.get(i);
+						System.out.println(comparendoActual.getObjective() + ", " +  comparendoActual.getTipo_servi() + ", " + comparendoActual.getInfraccion() + ", " + comparendoActual.getFecha_hora() + ", " + comparendoActual.getClase_vehi() + ", " +  comparendoActual.getLocalidad() );
+					}
+					System.out.println();
+				}
+
 				break;
 
 				// Requerimiento 3B
 			case 7:
-				break;
+				view.printMessage("Por favor ingrese el límite inferior del rango de latitudes deseado: ");
+				double entradaH = lector.nextDouble();
+				view.printMessage("Por favor ingrese el límite superior del rango de latitudes deseado: ");
+				double entradaI = lector.nextDouble();
+				System.out.println("Ingrese la clase de vehículo a consultar (ej: AUTOMÓVIL, BICICLETA): ");
+				String entradaJ = lector.next();
+				
+				ArrayList<Comparendo> devolverr = modelo.darComparendosRangoLats(entradaH, entradaI, entradaJ);
 
-				// Requerimiento 1C
+				if (devolverr.size()==0)
+				{
+					System.out.println("No hay comparendos que cumplan con los criterios de búsqueda dados.");
+					System.out.println();
+				}
+				else
+				{
+					System.out.println("Los comparendos que cumplen con los criterios de búsqueda dados son:");
+				
+					for(int i = 0; i < devolverr.size(); i++)
+					{
+						Comparendo comparendoActual = devolverr.get(i);
+						System.out.println(comparendoActual.getObjective() + ", " +  comparendoActual.getTipo_servi() + ", " + comparendoActual.getInfraccion() + ", " + comparendoActual.getFecha_hora() + ", " + comparendoActual.getClase_vehi() + " --- fue puesto en latitud: " +  comparendoActual.getLatitud() );
+					}
+					System.out.println();
+				}
+
+				break;
+				
 			case 8:
 				System.out.println("Por favor ingrese el numero de dias D: ");
 				int entrada7 = lector.nextInt();
