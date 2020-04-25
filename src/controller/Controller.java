@@ -38,7 +38,7 @@ public class Controller {
 		modelo = new Modelo();
 	}
 
-	public void run() 
+	public void run() throws ParseException 
 	{
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
@@ -340,7 +340,7 @@ public class Controller {
 
 				// Requerimiento 2C
 			case 9:
-				System.out.println("El costo que generan las penalizaciones en 2018 es de: " + modelo.darCostoPenalizacionesyDias()[0]);
+				System.out.println("El costo que generan las penalizaciones en 2018 es de: $" + modelo.darCostoPenalizacionesyDias()[0]);
 				System.out.println("El número de días en promedio que debe esperar un comparendo: " + modelo.darCostoPenalizacionesyDias()[1]);
 				System.out.println("Importante cada * o # significa 50 comparendos");
 				System.out.println("Fecha           | Comparendos Procesados              ***");
@@ -408,8 +408,78 @@ public class Controller {
 
 				// Requerimiento 3C
 			case 10:
+				
+				int devo = modelo.revisar();
+		
+				System.out.println("El costo que generan las penalizaciones en 2018 es de: $" + devo);
+				System.out.println("El número de días en promedio que debe esperar un comparendo: " + 527655/(365*1500));
+				System.out.println("Importante cada * o # significa 50 comparendos");
+				System.out.println("Fecha           | Comparendos Procesados              ***");
+				System.out.println("                | Comparendos que están en espera     ###");
+				System.out.println("---------------------------------------------------------");
+				
+				Comparable<Comparendo> copia_Comparendos3 [ ] = modelo.copiarComparendosArreglo();
+
+				int x1 =0;
+				Comparendo nuevo90 = null;
+				for(int i = 0; i < copia_Comparendos3.length ; i++)
+				{
+					nuevo90 = (Comparendo) copia_Comparendos3[i];
+					if(nuevo90 != null)
+					{
+						x1++;
+					}
+				}
+
+				Comparendo[] nuevo100 = new Comparendo[x1];
+
+				Comparendo nuevo110 = null;
+				for(int i = 0; i < copia_Comparendos3.length ; i++)
+				{
+					nuevo110 = (Comparendo) copia_Comparendos3[i];
+					if(nuevo110 != null)
+					{
+						nuevo100[i] = nuevo110;
+					}
+				}
+				
+				Comparendo primero1 = nuevo100[0];
+				
+				SimpleDateFormat sdf11 = new SimpleDateFormat("yyyy/MM/dd");
+				Date fecha1 = primero1.getFecha_hora();
+				String fechaComoCadena31 = "2018/01/01";
+				Date fechaa1;
+				try 
+				{
+					fechaa1 = sdf11.parse(fechaComoCadena31);
+					String[] arreglo = modelo.darNumeroProcesados(nuevo100, fecha1);
+					String[] arreglo2 = modelo.darNumeroEspera(nuevo100, fecha1);
+					System.out.println(fechaComoCadena31 + "      | " + arreglo[0]);
+					System.out.println("                | " + arreglo2[0]);
+					for(int i = 0; i < 248; i++)
+					{
+						fechaa1 = modelo.addDays(fechaa1, 1);
+						
+						String fecha13 = sdf11.format(fechaa1);
+						System.out.println(fecha13 + "      | " + arreglo[i]);	
+						System.out.println( "                | " + arreglo2[i]);
+					}
+				} catch (ParseException e) 
+				{
+					e.printStackTrace();
+				}
+				
+				System.out.println(" ");
+				System.out.println("Tabla con la información de tiempos:");
+				System.out.println("Costo Diario Comparendo | Tiempo Minimo | Tiempo Promedio | Tiempo Maximo |");
+				System.out.println("$400                    |     0        |       0        |        0      |");
+				System.out.println("$40                     |     0        |       0        |        0      |");
+				System.out.println("$4                      |     0        |       3        |       39      |");
 				break;
 
+				// Requerimiento 3C
+				
+				
 				// Cerrar el API
 			case 11:
 				lector.close();

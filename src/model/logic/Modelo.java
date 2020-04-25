@@ -2,6 +2,7 @@ package model.logic;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ import model.data_structures.SeparteChainingHash2;
 
 public class Modelo 
 {
-	public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";
-	//	public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C.geojson";
+	//public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";
+	public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C.geojson";
 
 	/**
 	 * Lista de comparendos
@@ -352,6 +353,8 @@ public class Modelo
 		while(it.hasNext())
 		{
 			Comparendo actualComparendo = it.next();
+			int dia = 0;
+			
 			if(actualComparendo.getDes_infrac().equals("SERA INMOVILIZADO") || actualComparendo.getDes_infrac().equals("SERÁ INMOVILIZADO"))
 			{
 				costoPenalizacion += (400 * numDia);
@@ -848,6 +851,106 @@ public class Modelo
         }
 		
 		return devolver;
+	}
+	
+
+	public int revisar() throws ParseException
+	{
+
+		datos1 = cargarDatos();
+		
+		int gs = 0;
+		int ms = 0;
+		int ps = 0;
+		
+		System.out.println("Hay datos: " + datos1.size());
+
+		//ordenar la lista
+		for (int i = 0; i < datos1.size(); i++) 
+        {
+            for (int j = i + 1; j < datos1.size(); j++) { 
+
+                if (datos1.get(i).getFecha_hora().compareTo( datos1.get(j).getFecha_hora() ) > 0) 
+                {
+                    Comparendo temp = datos1.get(i);
+                    datos1.set(i, datos1.get(j));
+                    datos1.set(j, temp);
+                }
+            }
+        }
+		
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Date anterior = new Date();
+		int costo = 0;
+		int grande = 0;
+		int mediano = 0;
+		int pequenio = 0;
+
+		Iterator<Comparendo> it = datos1.iterator();
+		while(it.hasNext())
+		
+		{	
+			Comparendo elementoActual = it.next();
+			
+			Date ta = formatter.parse(formatter.format(elementoActual.getFecha_hora()));
+			
+			if(elementoActual.getDes_infrac().indexOf("SERA INMOVILIZADO") != -1 ||  elementoActual.getDes_infrac().indexOf("SERÁ INMOVILIZADO") != -1 )
+			{
+				grande++;
+			}
+			else if(elementoActual.getDes_infrac().indexOf("LICENCIA DE CONDUCCIÓN") != -1 ||  elementoActual.getDes_infrac().indexOf("LICENCIA DE CONDUCCION") != -1 )
+			{
+				mediano++;
+			}
+			else
+			{
+				pequenio++;
+			}
+			
+			
+			if(!ta.equals(anterior))
+
+			{
+
+				
+				if (grande > 1500)
+				{
+					costo = costo + (grande-1500)*400;
+					costo = costo + mediano*40;
+					costo = costo + pequenio*4;
+					
+					gs += (grande-1500);
+					ms += mediano;
+					ps += pequenio;
+				}
+				else if (grande + mediano > 1500)
+				{
+					costo = costo + (mediano-(1500-grande))*40;
+					costo = costo + pequenio*4;
+					
+					ms += (mediano-(1500-grande));
+					ps += pequenio;
+				}
+				else if (grande + mediano + pequenio > 1500)
+				{
+					costo = costo + (pequenio-(1500-grande-mediano))*4;
+					
+					ps += (pequenio-(1500-grande-mediano));
+				}
+				
+				grande = 0;
+				mediano = 0;
+				pequenio = 0;
+				
+			}
+			
+			anterior = ta;
+			
+		}
+		
+		System.out.println(gs + " de 400 esperaron, " + ms + " de 40 esperaron y " + ps + " de 4 esperaron");
+		return costo;
 	}
 	
 	
