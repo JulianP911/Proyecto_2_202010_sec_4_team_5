@@ -40,8 +40,8 @@ import model.data_structures.SeparteChainingHash2;
 
 public class Modelo 
 {
-	//public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";
-	public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C.geojson";
+	public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";
+	//public static String PATH = "./data/comparendos_DEI_2018_Bogotá_D.C.geojson";
 
 	/**
 	 * Lista de comparendos
@@ -863,8 +863,6 @@ public class Modelo
 		int ms = 0;
 		int ps = 0;
 		
-		System.out.println("Hay datos: " + datos1.size());
-
 		//ordenar la lista
 		for (int i = 0; i < datos1.size(); i++) 
         {
@@ -949,7 +947,6 @@ public class Modelo
 			
 		}
 		
-		System.out.println(gs + " de 400 esperaron, " + ms + " de 40 esperaron y " + ps + " de 4 esperaron");
 		return costo;
 	}
 	
